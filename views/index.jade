@@ -1,2 +1,10 @@
-h1= title
-p Welcome to #{title}
+#wrapper
+  h1#title Lights
+
+  ul#palette
+    - var colors = ['red', 'green', 'blue', 'yellow'];
+    each color in colors
+      li.paletteColor(color="#{color}", style="background-color:#{color}") &nbsp;
+
+  canvas#lights(height='400', width='800')
+

@@ -23,7 +23,6 @@ $(function () {
 
         setColor : function (color) {
             this.set({'color': color});
-            log('color' + color);
         },
 
         getColor : function () {
@@ -44,11 +43,6 @@ $(function () {
 
         },
 
-        render : {
-            var template =
-
-        },
-
         events : {
             'click .paletteColor' : 'onColorClick'
         },
@@ -60,9 +54,11 @@ $(function () {
         },
 
         onModelChange : function () {
-            this.paletteColors.removeClass('selected');
             var color = this.model.getColor();
-            this.paletteColors.find('[color="' + color + '"]').addClass('selected');
+            this.paletteColors
+                    .removeClass('selected')
+                    .filter('[color="' + color + '"]')
+                    .addClass('selected');
         }
 
     });

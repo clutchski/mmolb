@@ -22,6 +22,11 @@ body {
   right:50;
 }
 
+.paletteColor {
+  width: 50px;
+}
+
+
 .selected {
   border:2px solid black;
 }

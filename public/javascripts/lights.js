@@ -43,9 +43,9 @@ $(function () {
 
         initialize : function () {
             this.matrix = [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0]
+                ['#fff', null, '#ddd'],
+                [null, null, null],
+                [null, null, null]
             ];
         }
 
@@ -73,7 +73,8 @@ $(function () {
             var y = 100;
             _.each(this.model.matrix, function (row, i) {
                 _.each(row, function (cell, j) {
-                    this.drawLight(x + i * 50, y + j * 50, '#fff');
+                    var color = cell || '#000';
+                    this.drawLight(x + i * 50, y + j * 50, color);
                 }, this);
             }, this);
         },

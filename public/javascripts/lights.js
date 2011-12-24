@@ -4,11 +4,6 @@
 
 $(function () {
 
-    // Use mustache style template interpolation {{ }}
-    _.templateSettings = {
-      interpolate : /\{\{(.+?)\}\}/g
-    };
-
     var log = function (message) {
         if (console) console.log(message);
     };
@@ -42,11 +37,6 @@ $(function () {
     var LightBright = Backbone.Model.extend({
 
         initialize : function () {
-            this.matrix = [
-                ['#fff', null, '#ddd'],
-                [null, null, null],
-                [null, null, null]
-            ];
         }
 
     });
@@ -59,6 +49,10 @@ $(function () {
 
     var LightBrightView = Backbone.View.extend({
 
+        events : {
+            'click' : 'onClick'
+        },
+
         initialize : function (options) {
             this.palette = options.palette;
             this.model.bind('change', _.bind(this.update, this));
@@ -68,10 +62,18 @@ $(function () {
             this.update();
         },
 
+        onClick : function (event) {
+            var offset = this.el.offset();
+            var x = event.clientX - offset.left;
+            var y = event.clientY - offset.top;
+
+            console.log(x + " " + y);
+        },
+
         update : function () {
             var x = 100;
             var y = 100;
-            _.each(this.model.matrix, function (row, i) {
+            _.each(this.model.get('matrix'), function (row, i) {
                 _.each(row, function (cell, j) {
                     var color = cell || '#000';
                     this.drawLight(x + i * 50, y + j * 50, color);
@@ -80,11 +82,16 @@ $(function () {
         },
 
         drawLight : function (x, y, color) {
-            log("p " + x + " " +  y);
             this.context.fillStyle = color;
             this.context.beginPath();
             this.context.arc(x, y, 20, 0, Math.PI * 2);
             this.context.fill()
+        },
+
+        findLight : function (x, y) {
+
+
+
         }
 
     });
@@ -127,8 +134,13 @@ $(function () {
         palette.setColor(color);
     });
 
-    var lightBright = new LightBright();
-    var lightBrightView = new LightBrightView({id:'lights',
+    var matrix = [
+        ['#000', '#333', '#ef41ac'],
+        [null, null, null],
+        [null, null, null]
+    ];
+    var lightBright = new LightBright({matrix:matrix});
+    var lightBrightView = new LightBrightView({el:$('#lights'),
             model:lightBright, palette:palette});
 
 });

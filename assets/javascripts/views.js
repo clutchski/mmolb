@@ -1,53 +1,12 @@
-//
-// Lights.
-//
+//= require lumiere
 
-$(function () {
-
-    var log = function (message) {
-        if (console) console.log(message);
-    };
-
-    //
-    // Models
-    //
-
-    var Palette = Backbone.Model.extend({
-
-        defaults : {
-            'color' : 'yellow',
-            'colors' : ['red', 'green', 'blue', 'yellow']
-        },
-
-        setColor : function (color) {
-            this.set({'color': color});
-        },
-
-        getColor : function () {
-            return this.get('color');
-        },
-
-        getColors : function () {
-            return this.get('colors');
-        }
-
-    });
+(function () {
 
 
-    var LightBright = Backbone.Model.extend({
-
-        initialize : function () {
-        }
-
-    });
-
-
-    //
-    // Views
-    //
-
-
-    var LightBrightView = Backbone.View.extend({
+    /**
+     * The view for our screen/
+     */
+    lumiere.ScreenView = Backbone.View.extend({
 
         events : {
             'click' : 'onClick'
@@ -90,19 +49,20 @@ $(function () {
 
         findLight : function (x, y) {
 
-
-
         }
 
     });
 
 
-    var PaletteView = Backbone.View.extend({
+    /**
+     * The Palette's view.
+     */
+
+    lumiere.PaletteView = Backbone.View.extend({
 
         initialize : function () {
             this.model.bind('change', _.bind(this.onModelChange, this));
             this.paletteColors = $('.paletteColor');
-
         },
 
         events : {
@@ -124,23 +84,4 @@ $(function () {
 
     });
 
-
-    //
-    // Run the application.
-    //
-    var palette = new Palette();
-    var paletteView = new PaletteView({el:$('#palette'), model:palette});
-    paletteView.bind('color_selected', function (color) {
-        palette.setColor(color);
-    });
-
-    var matrix = [
-        ['#000', '#333', '#ef41ac'],
-        [null, null, null],
-        [null, null, null]
-    ];
-    var lightBright = new LightBright({matrix:matrix});
-    var lightBrightView = new LightBrightView({el:$('#lights'),
-            model:lightBright, palette:palette});
-
-});
+})();

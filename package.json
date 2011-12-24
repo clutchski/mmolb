@@ -7,4 +7,7 @@
     , "jade": ">= 0.0.1"
     , "connect-assets": ">= 2.1.6"
   }
+  , "engines": {
+        "node": "0.6.6"
+  }
 }

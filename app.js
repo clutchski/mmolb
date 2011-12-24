@@ -21,8 +21,8 @@ app.configure(function(){
 
 
 // Configure asset roots.
-css.root = '/assets/stylesheets'
-js.root  = '/assets/javascripts'
+css.root = '/stylesheets'
+js.root  = '/javascripts'
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));

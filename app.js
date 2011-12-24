@@ -4,19 +4,25 @@
 
 var express = require('express')
   , routes = require('./routes')
+  , connectAssets = require('connect-assets');
 
 var app = module.exports = express.createServer();
 
 // Configuration
-
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
+  app.use(connectAssets());
   app.use(express.static(__dirname + '/public'));
 });
+
+
+// Configure asset roots.
+css.root = '/assets/stylesheets'
+js.root  = '/assets/javascripts'
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));

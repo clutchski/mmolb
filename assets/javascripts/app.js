@@ -16,7 +16,10 @@ $(function () {
         [null, null, null]
     ];
     var screen = new lumiere.Screen({matrix:matrix});
-    var screenView = new lumiere.ScreenView({el:$('#lights'),
-            model:screen, palette:palette});
+    var screenView = new lumiere.ScreenView({el:$('#lights'), model:screen});
+    screenView.bind('element_selected', function (i, j) {
+        var color = palette.getColor();
+        screen.toggleElement(i, j, color);
+    });
 
 });

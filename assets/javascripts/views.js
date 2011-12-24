@@ -4,7 +4,7 @@
 
 
     /**
-     * The view for our screen/
+     * The view for our screen.
      */
     lumiere.ScreenView = Backbone.View.extend({
 
@@ -13,7 +13,10 @@
         },
 
         initialize : function (options) {
-            this.palette = options.palette;
+
+            this.cellSize = 20;
+            this.radius = this.cellSize * 0.40;
+
             this.model.bind('change', _.bind(this.update, this));
 
             this.canvas = document.getElementById('lights');
@@ -22,33 +25,37 @@
         },
 
         onClick : function (event) {
-            var offset = this.el.offset();
-            var x = event.clientX - offset.left;
-            var y = event.clientY - offset.top;
+            var i = Math.round((event.offsetX - this.radius) / this.cellSize);
+            var j = Math.round((event.offsetY - this.radius) / this.cellSize);
 
-            console.log(x + " " + y);
+            this.trigger('element_selected', i, j);
         },
 
+        // Update the view based on the current state of the model.
         update : function () {
-            var x = 100;
-            var y = 100;
-            _.each(this.model.get('matrix'), function (row, i) {
-                _.each(row, function (cell, j) {
-                    var color = cell || '#000';
-                    this.drawLight(x + i * 50, y + j * 50, color);
-                }, this);
-            }, this);
+            var width = this.el.width();
+            var height = this.el.height();
+
+            var numx = width/this.cellSize;
+            var numy = height/this.cellSize;
+
+            for (var i = 0; i < numx; i++) {
+                for (var j = 0; j < numy; j++) {
+                    var color = this.model.getElement(i, j) || '#666';
+                    var x = i * this.cellSize + this.radius;
+                    var y = j * this.cellSize + this.radius;
+                    this.drawLight(x, y, color);
+                }
+            }
         },
 
+        // Draw a light at the point with the given color.
         drawLight : function (x, y, color) {
+            console.log(" " + x + " " + y + " " + color);
             this.context.fillStyle = color;
             this.context.beginPath();
-            this.context.arc(x, y, 20, 0, Math.PI * 2);
+            this.context.arc(x, y, this.radius, 0, Math.PI * 2);
             this.context.fill()
-        },
-
-        findLight : function (x, y) {
-
         }
 
     });

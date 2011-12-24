@@ -15,8 +15,18 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(connectAssets());
   app.use(express.static(__dirname + '/public'));
+});
+
+// Environment specific config.
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.use(connectAssets());
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler());
+  app.use(connectAssets({build:true}));
 });
 
 
@@ -24,13 +34,6 @@ app.configure(function(){
 css.root = '/stylesheets'
 js.root  = '/javascripts'
 
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
 
 // Routes
 

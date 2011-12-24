@@ -51,7 +51,6 @@
 
         // Draw a light at the point with the given color.
         drawLight : function (x, y, color) {
-            console.log(" " + x + " " + y + " " + color);
             this.context.fillStyle = color;
             this.context.beginPath();
             this.context.arc(x, y, this.radius, 0, Math.PI * 2);

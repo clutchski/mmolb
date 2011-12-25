@@ -24,9 +24,10 @@
             this.update();
         },
 
-        onClick : function (event) {
-            var i = Math.round((event.offsetX - this.radius) / this.cellSize);
-            var j = Math.round((event.offsetY - this.radius) / this.cellSize);
+        onClick : function (e) {
+            var r = Math.round;
+            var i = r((e.pageX - e.target.offsetLeft - this.radius) / this.cellSize);
+            var j = r((e.pageY - e.target.offsetTop - this.radius) / this.cellSize);
 
             this.trigger('element_selected', i, j);
         },

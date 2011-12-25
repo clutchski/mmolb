@@ -40,4 +40,4 @@ var io = socketio.listen(app);
 
 // Start 'er up.
 app.listen(process.env.PORT || 5000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("Listening on %d in %s mode", app.address().port, app.settings.env);

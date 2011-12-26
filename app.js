@@ -1,11 +1,9 @@
-/**
- * Module dependencies.
- */
 
 var express = require('express')
   , socketio = require('socket.io')
   , connectAssets = require('connect-assets')
-  , routes = require('./routes');
+  , routes = require('./routes')
+  , services = require('./services');
 
 
 // Initialize and configure the server.
@@ -37,6 +35,7 @@ app.get('/', routes.index);
 
 // Configure socket handlers.
 var io = socketio.listen(app);
+services.initialize(io);
 
 // Start 'er up.
 app.listen(process.env.PORT || 5000);

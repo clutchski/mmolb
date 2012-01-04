@@ -8,11 +8,7 @@ $(function () {
     var socket = io.connect(window.location.origin);
     // Models.
     var palette = new lumiere.Palette();
-    var matrix = [
-        ['#000', '#333', '#ef41ac'],
-        [null, null, null],
-        [null, null, null]
-    ];
+    var matrix = [];
     var screen = new lumiere.Screen({matrix:matrix});
 
     // Screen.
@@ -35,5 +31,9 @@ $(function () {
         screen.toggleElement(data.i, data.j, data.color);
     });
 
+    socket.on('matrix_updated', function (data) {
+        console.log(data);
+        screen.set({'matrix': data.matrix});
+    });
 
 });

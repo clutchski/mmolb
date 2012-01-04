@@ -1,9 +1,7 @@
-
 var express = require('express')
   , socketio = require('socket.io')
   , connectAssets = require('connect-assets')
-  , routes = require('./routes')
-  , services = require('./services');
+  , routes = require('./routes');
 
 
 // Initialize and configure the server.
@@ -35,7 +33,11 @@ app.get('/', routes.index);
 
 // Configure socket handlers.
 var io = socketio.listen(app);
-services.initialize(io);
+io.sockets.on('connection', function (socket) {
+    socket.on('element_selected', function (data) {
+        socket.broadcast.emit('element_selected', data);
+    });
+});
 
 // Start 'er up.
 app.listen(process.env.PORT || 5000);

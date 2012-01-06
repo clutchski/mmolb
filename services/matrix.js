@@ -1,8 +1,15 @@
 
 var matrix = [
-    [null, null, 'red'],
-    ['green', 'yellow', 'yellow']
+    ['red', 'green', 'yellow'],
+    [null, null, 'blue'],
+    []
 ];
+
+
+for (var i = 0; i < 1000; i++) {
+    matrix[2][i] = 'yellow';
+}
+
 
 /**
  * Return the light bright matrix.

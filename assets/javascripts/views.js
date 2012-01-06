@@ -26,8 +26,9 @@
 
         onClick : function (e) {
             var r = Math.round;
-            var i = r((e.pageX - e.target.offsetLeft - this.radius) / this.cellSize);
-            var j = r((e.pageY - e.target.offsetTop - this.radius) / this.cellSize);
+            var t = e.target;
+            var i = r((e.pageX - t.offsetLeft - this.radius) / this.cellSize);
+            var j = r((e.pageY - t.offsetTop - this.radius) / this.cellSize);
 
             this.trigger('element_selected', i, j);
         },

@@ -9,7 +9,8 @@
     lumiere.ScreenView = Backbone.View.extend({
 
         events : {
-            'click' : 'onClick'
+            'click' : 'onClick',
+            'mousedown' : 'onMouseDown',
         },
 
         initialize : function (options) {
@@ -22,6 +23,24 @@
             this.canvas = document.getElementById('lights');
             this.context = this.canvas.getContext('2d');
             this.update();
+        },
+
+        onMouseDown : function (e) {
+            event.preventDefault();
+            // Bind move events to the window because the user can move their mouse/finger
+            // anywhere on the screen, not just over the slider bar.
+            $(window).bind('mousemove', _.bind(this.onMouseMove, this));
+            $(window).bind('mouseup', _.bind(this.onMouseUp, this));
+        },
+
+        onMouseMove : function () {
+            console.log('mousemove');
+        },
+
+        onMouseUp : function () {
+            console.log('mouseup');
+            $(window).unbind('mousemove');
+            $(window).unbind('mouseup');
         },
 
         onClick : function (e) {

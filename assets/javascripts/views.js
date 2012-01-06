@@ -9,47 +9,66 @@
     lumiere.ScreenView = Backbone.View.extend({
 
         events : {
-            'click' : 'onClick',
             'mousedown' : 'onMouseDown',
         },
 
         initialize : function (options) {
 
+            // Our canvas object.
+            this.canvas = document.getElementById('lights');
+            this.context = this.canvas.getContext('2d');
+
+            // The index of the top left light on the screen.
+            this.origin = {i:0, j:0};
+
+            // The size of each light.
             this.cellSize = 20;
             this.radius = this.cellSize * 0.40;
 
+            // Update the view when the model changes.
             this.model.bind('change', _.bind(this.update, this));
-
-            this.canvas = document.getElementById('lights');
-            this.context = this.canvas.getContext('2d');
             this.update();
         },
 
-        onMouseDown : function (e) {
+        onMouseDown : function (event) {
             event.preventDefault();
+            this.startElement = this.lastElement = this.getEventElement(event);
             // Bind move events to the window because the user can move their mouse/finger
             // anywhere on the screen, not just over the slider bar.
             $(window).bind('mousemove', _.bind(this.onMouseMove, this));
             $(window).bind('mouseup', _.bind(this.onMouseUp, this));
         },
 
-        onMouseMove : function () {
-            console.log('mousemove');
+        onMouseMove : function (event) {
+            var element = this.getEventElement(event);
+            if (!_.isEqual(element, this.lastElement)) {
+                console.log(element.i);
+                this.origin.i += this.lastElement.i - element.i;
+                this.origin.j += this.lastElement.j - element.j;
+                this.lastElement = element;
+                this.update();
+            }
         },
 
         onMouseUp : function () {
-            console.log('mouseup');
             $(window).unbind('mousemove');
             $(window).unbind('mouseup');
+            var element = this.getEventElement(event)
+            if (_.isEqual(element, this.startElement)) {
+                var i = element.i + this.origin.i;
+                var j = element.j + this.origin.j;
+                this.trigger('element_selected', i, j);
+                this.startElement = null;
+            }
         },
 
-        onClick : function (e) {
+        getEventElement : function (e) {
             var r = Math.round;
-            var t = e.target;
-            var i = r((e.pageX - t.offsetLeft - this.radius) / this.cellSize);
-            var j = r((e.pageY - t.offsetTop - this.radius) / this.cellSize);
-
-            this.trigger('element_selected', i, j);
+            var point = this.getEventPoint(e);
+            return {
+                i : r((point.x - this.radius) / this.cellSize),
+                j : r((point.y - this.radius) / this.cellSize)
+            };
         },
 
         // Update the view based on the current state of the model.
@@ -62,13 +81,23 @@
 
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
-                    var color = this.model.getElement(i, j) || '#666';
+                    var color = this.model.getElement(i + this.origin.i,
+                                        j + this.origin.j) || '#666';
                     var x = i * this.cellSize + this.radius;
                     var y = j * this.cellSize + this.radius;
                     this.drawLight(x, y, color);
                 }
             }
         },
+
+
+        getEventPoint : function (event) {
+            return {
+                x : event.pageX - event.target.offsetLeft,
+                y : event.pageY - event.target.offsetTop
+            }
+        },
+
 
         // Draw a light at the point with the given color.
         drawLight : function (x, y, color) {

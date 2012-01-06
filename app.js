@@ -1,7 +1,8 @@
 var express = require('express')
   , socketio = require('socket.io')
   , connectAssets = require('connect-assets')
-  , routes = require('./routes');
+  , routes = require('./routes')
+  , matrix = require('./services/matrix');
 
 
 // Initialize and configure the server.
@@ -32,23 +33,12 @@ js.root  = '/javascripts'
 app.get('/', routes.index);
 
 
-var matrix = [[null, null, 'red'], ['green', 'yellow', 'yellow']];
-
-
-var updateMatrix = function (i, j, color) {
-    matrix[i] = matrix[i] || [];
-    matrix[i][j] = color;
-};
-
 // Configure socket handlers.
 var io = socketio.listen(app);
 io.sockets.on('connection', function (socket) {
-
-    socket.emit('matrix_updated', {matrix: matrix});
-
+    socket.emit('matrix_updated', {'matrix': matrix.getMatrix()});
     socket.on('element_selected', function (data) {
-
-        updateMatrix(data.i, data.j, data.color);
+        matrix.setElement(data.i, data.j, data.color);
         socket.broadcast.emit('element_selected', data);
     });
 });

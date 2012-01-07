@@ -1,8 +1,8 @@
-var express = require('express')
-  , socketio = require('socket.io')
-  , connectAssets = require('connect-assets')
-  , routes = require('./routes')
-  , matrix = require('./services/matrix');
+var express = require('express'),
+    socketio = require('socket.io'),
+    connectAssets = require('connect-assets'),
+    routes = require('./routes'),
+    matrix = require('./services/matrix');
 
 
 // Initialize and configure the server.
@@ -16,7 +16,7 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
 });
 
-app.configure('development', function(){
+app.configure('development', function() {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
     app.use(connectAssets());
 });
@@ -26,8 +26,8 @@ app.configure('production', function(){
     app.use(connectAssets({build:true}));
 });
 
-css.root = '/stylesheets'
-js.root  = '/javascripts'
+css.root = '/stylesheets';
+js.root  = '/javascripts';
 
 // Configure routes.
 app.get('/', routes.index);

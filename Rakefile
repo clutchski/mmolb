@@ -23,7 +23,13 @@ task :lint do
     "services"
   ]
   paths = dirs.map {|d| "#{d}/*.js"}.join(" ")
-  sh("./node_modules/.bin/jshint #{paths}")
+  cmds = [
+    "./node_modules/.bin/jshint",
+    paths,
+    "--config",
+    "jshint.config.json",
+  ]
+  sh cmds.join(" ")
 end
 
 task :default => :run

@@ -9,15 +9,15 @@ $(function () {
     // Models.
     var palette = new lumiere.Palette();
     var matrix = [];
-    var screen = new lumiere.Screen({matrix:matrix});
+    var screen = new lumiere.Screen({matrix : matrix});
 
     // Screen.
-    var paletteView = new lumiere.PaletteView({el:$('#palette'), model:palette});
+    var paletteView = new lumiere.PaletteView({e: $('#palette'), model: palette});
     paletteView.bind('color_selected', function (color) {
         palette.setColor(color);
     });
 
-    var screenView = new lumiere.ScreenView({el:$('#lights'), model:screen});
+    var screenView = new lumiere.ScreenView({el: $('#lights'), model: screen});
     screenView.bind('element_selected', function (i, j) {
         var color = palette.getColor();
         screen.toggleElement(i, j, color);

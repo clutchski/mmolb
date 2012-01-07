@@ -40,7 +40,7 @@
             var row = matrix[i] || [];
             row[j] = (row[j] === color) ? null : color;
             matrix[i] = row;
-            this.set({matrix:matrix});
+            this.set({matrix: matrix});
             this.trigger('change');
         },
 

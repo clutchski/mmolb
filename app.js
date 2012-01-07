@@ -7,7 +7,7 @@ var express = require('express'),
 
 // Initialize and configure the server.
 var app = module.exports = express.createServer();
-app.configure(function(){
+app.configure(function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
@@ -16,14 +16,14 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
 });
 
-app.configure('development', function() {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+app.configure('development', function () {
+    app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
     app.use(connectAssets());
 });
 
-app.configure('production', function(){
+app.configure('production', function () {
     app.use(express.errorHandler());
-    app.use(connectAssets({build:true}));
+    app.use(connectAssets({build: true}));
 });
 
 css.root = '/stylesheets';

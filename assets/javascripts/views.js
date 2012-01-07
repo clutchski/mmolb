@@ -19,7 +19,7 @@
             this.context = this.canvas.getContext('2d');
 
             // The index of the top left light on the screen.
-            this.origin = {i:0, j:0};
+            this.origin = {i: 0, j: 0};
 
             // The size of each light.
             this.cellSize = 20;
@@ -76,8 +76,8 @@
             var width = this.el.width();
             var height = this.el.height();
 
-            var numx = width/this.cellSize;
-            var numy = height/this.cellSize;
+            var numx = width / this.cellSize;
+            var numy = height / this.cellSize;
 
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {

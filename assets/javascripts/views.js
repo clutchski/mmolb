@@ -35,8 +35,8 @@
             this.startElement = this.lastElement = this.getEventElement(event);
             // Bind move events to the window because the user can move their mouse/finger
             // anywhere on the screen, not just over the slider bar.
-            $(window).bind('mousemove', _.bind(this.onMouseMove, this));
-            $(window).bind('mouseup', _.bind(this.onMouseUp, this));
+            $(window).bind('mousemove', _.bind(this.onMouseMove, this))
+                     .bind('mouseup', _.bind(this.onMouseUp, this));
         },
 
         onMouseMove : function (event) {

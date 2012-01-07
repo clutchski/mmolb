@@ -9,7 +9,7 @@
     lumiere.ScreenView = Backbone.View.extend({
 
         events : {
-            'mousedown' : 'onMouseDown',
+            'mousedown' : 'onMouseDown'
         },
 
         initialize : function (options) {
@@ -53,7 +53,7 @@
         onMouseUp : function () {
             $(window).unbind('mousemove');
             $(window).unbind('mouseup');
-            var element = this.getEventElement(event)
+            var element = this.getEventElement(event);
             if (_.isEqual(element, this.startElement)) {
                 var i = element.i + this.origin.i;
                 var j = element.j + this.origin.j;
@@ -95,7 +95,7 @@
             return {
                 x : event.pageX - event.target.offsetLeft,
                 y : event.pageY - event.target.offsetTop
-            }
+            };
         },
 
 
@@ -104,7 +104,7 @@
             this.context.fillStyle = color;
             this.context.beginPath();
             this.context.arc(x, y, this.radius, 0, Math.PI * 2);
-            this.context.fill()
+            this.context.fill();
         }
 
     });

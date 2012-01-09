@@ -27,7 +27,7 @@ task :lint do
     "./node_modules/.bin/jshint",
     paths,
     "--config",
-    "jshint.config.json",
+    "jshint.json",
   ]
   sh cmds.join(" ")
 end

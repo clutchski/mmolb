@@ -2,6 +2,16 @@
 
 (function () {
 
+    // Helper functions.
+
+    var addPoints = function (a, b) {
+        return {x: a.x + b.x, y: a.y + b.y};
+    };
+
+    var subtractPoints = function (a, b) {
+        return addPoints(a, {x: -b.x, y: -b.y});
+    };
+
 
     /**
      * The view for our screen.
@@ -18,79 +28,99 @@
             this.canvas = document.getElementById('lights');
             this.context = this.canvas.getContext('2d');
 
-            // The index of the top left light on the screen.
-            this.origin = {i: 0, j: 0};
+            // The point in our space that is at the top-left corner
+            // of the canvas.
+            this.point = {x: 0, y: 0};
 
-            // The size of each light.
+            // Initial light dimensions in pixels.
             this.cellSize = 20;
             this.radius = this.cellSize * 0.40;
 
-            // Update the view when the model changes.
+            // Set up change handlers.
             this.model.bind('change', _.bind(this.update, this));
             this.update();
         },
 
+
+
         onMouseDown : function (event) {
             event.preventDefault();
-            this.startElement = this.lastElement = this.getEventElement(event);
-            // Bind move events to the window because the user can move their mouse/finger
-            // anywhere on the screen, not just over the slider bar.
+            this.startElement = this.getEventElement(event);
+            this.lastMovePoint = this.getEventPoint(event);
+            // Bind to the window, so scrolling works if the user goes outside
+            // of the canvas.
             $(window).bind('mousemove', _.bind(this.onMouseMove, this))
                      .bind('mouseup', _.bind(this.onMouseUp, this));
         },
 
         onMouseMove : function (event) {
-            var element = this.getEventElement(event);
-            if (!_.isEqual(element, this.lastElement)) {
-                console.log(element.i);
-                this.origin.i += this.lastElement.i - element.i;
-                this.origin.j += this.lastElement.j - element.j;
-                this.lastElement = element;
-                this.update();
-            }
+            var point = this.getEventPoint(event);
+            var delta = subtractPoints(point, this.lastMovePoint);
+
+            delta.x = delta.x;
+            delta.y = delta.y;
+
+            this.point = addPoints(this.point, delta);
+            this.lastMovePoint = point;
+
+            this.update();
         },
 
-        onMouseUp : function () {
-            $(window).unbind('mousemove');
-            $(window).unbind('mouseup');
+        onMouseUp : function (event) {
+            $(window).unbind('mousemove').unbind('mouseup');
             var element = this.getEventElement(event);
             if (_.isEqual(element, this.startElement)) {
-                var i = element.i + this.origin.i;
-                var j = element.j + this.origin.j;
+                var i = element.i;
+                var j = element.j;
+                console.log("selected " + i + ", " + j);
                 this.trigger('element_selected', i, j);
-                this.startElement = null;
             }
-        },
-
-        getEventElement : function (e) {
-            var r = Math.round;
-            var point = this.getEventPoint(e);
-            return {
-                i : r((point.x - this.radius) / this.cellSize),
-                j : r((point.y - this.radius) / this.cellSize)
-            };
         },
 
         // Update the view based on the current state of the model.
         update : function () {
+
             var width = this.el.width();
             var height = this.el.height();
+
+            // A clean slate.
+            this.context.clearRect(0, 0, width, height);
 
             var numx = width / this.cellSize;
             var numy = height / this.cellSize;
 
+            var sx = this.point.x % this.cellSize;
+            var sy = this.point.y % this.cellSize;
+
+            var oi = Math.floor((this.point.x / this.cellSize));
+            var oj = Math.floor((this.point.y / this.cellSize));
+
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
-                    var color = this.model.getElement(i + this.origin.i,
-                                        j + this.origin.j) || '#666';
-                    var x = i * this.cellSize + this.radius;
-                    var y = j * this.cellSize + this.radius;
+                    var color = this.model.getElement(i - oi, j - oj) || '#666';
+                    var x = sx + (i * this.cellSize) + this.radius;
+                    var y = sy + (j * this.cellSize) + this.radius;
                     this.drawLight(x, y, color);
                 }
             }
         },
 
+        /**
+         * Return the element that the given touch event touched.
+         */
+        getEventElement : function (e) {
+            var r = Math.floor;
+            var point = this.getEventPoint(e);
+            return {
+                i : r((point.x - this.point.x) / this.cellSize),
+                j : r((point.y - this.point.y) / this.cellSize)
+            };
+        },
 
+        /**
+         * Return the position of the given event relative to the canvas
+         * boundary.
+         */
         getEventPoint : function (event) {
             return {
                 x : event.pageX - event.target.offsetLeft,
@@ -98,8 +128,6 @@
             };
         },
 
-
-        // Draw a light at the point with the given color.
         drawLight : function (x, y, color) {
             this.context.fillStyle = color;
             this.context.beginPath();

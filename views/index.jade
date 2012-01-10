@@ -1,11 +1,14 @@
-#wrapper
-
-  h1#title MMOLB
+#header
+  h1#title M.M.O.L.B.
 
   ul#palette
     - var colors = ['red', 'green', 'blue', 'yellow'];
     each color in colors
       li.paletteColor(color="#{color}", style="background-color:#{color}") &nbsp;
 
-  canvas#lights(height='400', width='800')
+  #zoomers
+    a.zoomer(value="in", href="#") IN
+    a.zoomer(value="out", href="#") OUT
+
+canvas#lights(height='400', width='800')
 

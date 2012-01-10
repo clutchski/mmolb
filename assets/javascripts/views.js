@@ -79,8 +79,8 @@
         // Update the view based on the current state of the model.
         update : function () {
 
-            var width = this.el.width();
-            var height = this.el.height();
+            var width = this.el.width() + this.cellSize * 2;
+            var height = this.el.height() + this.cellSize * 2;
 
             // A clean slate.
             this.context.clearRect(0, 0, width, height);
@@ -88,8 +88,8 @@
             var numx = width / this.cellSize;
             var numy = height / this.cellSize;
 
-            var sx = this.point.x % this.cellSize;
-            var sy = this.point.y % this.cellSize;
+            var sx = this.point.x % this.cellSize - this.cellSize;
+            var sy = this.point.y % this.cellSize - this.cellSize;
 
             var oi = Math.floor((this.point.x / this.cellSize));
             var oj = Math.floor((this.point.y / this.cellSize));

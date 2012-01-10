@@ -109,8 +109,8 @@
             var numx = width / this.cellSize;
             var numy = height / this.cellSize;
 
-            var sx = this.point.x % this.cellSize - this.cellSize;
-            var sy = this.point.y % this.cellSize - this.cellSize;
+            var sx = this.point.x % this.cellSize - this.radius;
+            var sy = this.point.y % this.cellSize - this.radius;
 
             var oi = Math.floor((this.point.x / this.cellSize));
             var oj = Math.floor((this.point.y / this.cellSize));
@@ -118,8 +118,8 @@
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
                     var color = this.model.getElement(i - oi, j - oj) || '#666';
-                    var x = sx + (i * this.cellSize) + this.radius;
-                    var y = sy + (j * this.cellSize) + this.radius;
+                    var x = sx + (i * this.cellSize);
+                    var y = sy + (j * this.cellSize);
                     this.drawLight(x, y, color);
                 }
             }
@@ -154,7 +154,6 @@
             this.context.arc(x, y, this.radius, 0, Math.PI * 2);
             this.context.fill();
         },
-
 
         setCellSize : function (size) {
             this.cellSize += size;

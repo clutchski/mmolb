@@ -32,4 +32,14 @@ $(function () {
         screen.set({'matrix': data.matrix});
     });
 
+    var zoomView = new lumiere.ZoomView({el: $('#zoomers')});
+    zoomView.bind('zoom_in', function () {
+        screenView.zoomIn();
+    });
+    zoomView.bind('zoom_out', function () {
+        screenView.zoomOut();
+    });
+
+
+
 });

@@ -32,16 +32,37 @@
             // of the canvas.
             this.point = {x: 0, y: 0};
 
+            // Number of cells to draw off screen.
+            this.paddingCells = 2;
+
             // Initial light dimensions in pixels.
             this.cellSize = 20;
             this.radius = this.cellSize * 0.40;
 
             // Set up change handlers.
             this.model.bind('change', _.bind(this.update, this));
+            //$(window).resize(_.bind(this.onResize, this));
+
+            this.onResize();
+        },
+
+        zoomIn : function () {
+            this.zoom(1);
+        },
+
+        zoomOut : function () {
+            this.zoom(-1);
+        },
+
+        zoom : function (direction) {
+            this.setCellSize(direction * 5);
             this.update();
         },
 
-
+        onResize : function () {
+            this.canvas.width = document.width;
+            this.canvas.height = document.height;
+        },
 
         onMouseDown : function (event) {
             event.preventDefault();
@@ -79,8 +100,8 @@
         // Update the view based on the current state of the model.
         update : function () {
 
-            var width = this.el.width() + this.cellSize * 2;
-            var height = this.el.height() + this.cellSize * 2;
+            var width = this.el.width() + this.cellSize * this.paddingCells;
+            var height = this.el.height() + this.cellSize * this.paddingCells;
 
             // A clean slate.
             this.context.clearRect(0, 0, width, height);
@@ -109,10 +130,10 @@
          */
         getEventElement : function (e) {
             var r = Math.floor;
-            var point = this.getEventPoint(e);
+            var p = this.getEventPoint(e);
             return {
-                i : r((point.x - this.point.x) / this.cellSize),
-                j : r((point.y - this.point.y) / this.cellSize)
+                i : r((p.x - this.point.x) / this.cellSize) + 1,
+                j : r((p.y - this.point.y) / this.cellSize) + 1
             };
         },
 
@@ -132,6 +153,20 @@
             this.context.beginPath();
             this.context.arc(x, y, this.radius, 0, Math.PI * 2);
             this.context.fill();
+        },
+
+
+        setCellSize : function (size) {
+            this.cellSize += size;
+
+            if (this.cellSize <= 10 && size < 0) {
+                this.cellSize = 5;
+            }
+            if (this.cellSize >= 60 && size > 0) {
+                this.cellSize = 60;
+            }
+
+            this.radius = this.cellSize * 0.4;
         }
 
     });
@@ -163,6 +198,20 @@
                     .removeClass('selected')
                     .filter('[color="' + this.model.getColor() + '"]')
                     .addClass('selected');
+        }
+
+    });
+
+    lumiere.ZoomView = Backbone.View.extend({
+
+        events : {
+            'click .zoomer' : 'onZoom'
+        },
+
+        onZoom : function (event) {
+            var value = $(event.target).attr('value');
+            var zoomEvent = (value === 'in') ? 'zoom_in' : 'zoom_out';
+            this.trigger(zoomEvent);
         }
 
     });

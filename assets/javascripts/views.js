@@ -72,7 +72,6 @@
             if (_.isEqual(element, this.startElement)) {
                 var i = element.i;
                 var j = element.j;
-                console.log("selected " + i + ", " + j);
                 this.trigger('element_selected', i, j);
             }
         },

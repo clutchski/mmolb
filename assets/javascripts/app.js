@@ -21,18 +21,14 @@ $(function () {
     screenView.bind('element_selected', function (i, j) {
         var color = palette.getColor();
         screen.toggleElement(i, j, color);
-
         socket.emit('element_selected', {i : i, j : j, color : color});
-        console.log("Telling everyone");
     });
 
     socket.on('element_selected', function (data) {
-        console.log("Recieved element selected");
         screen.toggleElement(data.i, data.j, data.color);
     });
 
     socket.on('matrix_updated', function (data) {
-        console.log(data);
         screen.set({'matrix': data.matrix});
     });
 

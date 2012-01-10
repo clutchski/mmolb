@@ -12,7 +12,7 @@ $(function () {
     var screen = new lumiere.Screen({matrix : matrix});
 
     // Screen.
-    var paletteView = new lumiere.PaletteView({e: $('#palette'), model: palette});
+    var paletteView = new lumiere.PaletteView({el: $('#palette'), model: palette});
     paletteView.bind('color_selected', function (color) {
         palette.setColor(color);
     });

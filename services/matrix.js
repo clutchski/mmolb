@@ -6,7 +6,7 @@ var matrix = [
 ];
 
 
-for (var i = 0; i < 1000; i++) {
+for (var i = 0; i < 100; i++) {
     matrix[2][i] = 'yellow';
 }
 

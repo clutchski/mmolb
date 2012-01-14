@@ -68,6 +68,7 @@
             event.preventDefault();
             this.startElement = this.getEventElement(event);
             this.lastMovePoint = this.getEventPoint(event);
+            this.moved = false;
             // Bind to the window, so scrolling works if the user goes outside
             // of the canvas.
             $(window).bind('mousemove', _.bind(this.onMouseMove, this))
@@ -75,6 +76,7 @@
         },
 
         onMouseMove : function (event) {
+            this.moved = true;
             var point = this.getEventPoint(event);
             var delta = subtractPoints(point, this.lastMovePoint);
             this.point = addPoints(this.point, delta);
@@ -84,8 +86,8 @@
 
         onMouseUp : function (event) {
             $(window).unbind('mousemove').unbind('mouseup');
-            var element = this.getEventElement(event);
-            if (_.isEqual(element, this.startElement)) {
+            if (!this.moved) {
+                var element = this.getEventElement(event);
                 var i = element.i;
                 var j = element.j;
                 this.trigger('element_selected', i, j);

@@ -77,13 +77,8 @@
         onMouseMove : function (event) {
             var point = this.getEventPoint(event);
             var delta = subtractPoints(point, this.lastMovePoint);
-
-            delta.x = delta.x;
-            delta.y = delta.y;
-
             this.point = addPoints(this.point, delta);
             this.lastMovePoint = point;
-
             this.update();
         },
 

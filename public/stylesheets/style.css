@@ -28,8 +28,8 @@ body {
 }
 
 #title {
-display:inline;
-float:left;
+  display:inline;
+  float:left;
   font-size:40px;
 }
 #palette {

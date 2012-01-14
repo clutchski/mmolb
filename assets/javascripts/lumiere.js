@@ -19,3 +19,30 @@
 
 // Our app's global namespace.
 var lumiere = {};
+
+
+//
+// Utility functions and classes.
+//
+
+lumiere.Logger = function (namespace) {
+    this.namespace = namespace;
+};
+
+lumiere.Logger.prototype = {
+
+    log : function (level, message) {
+        if (console) {
+            var fields = [this.namespace, level, message];
+            console.log(fields.join(" | "));
+        }
+    },
+
+    debug : function (message) {
+        this.log("DEBUG", message);
+    },
+
+    info : function (message)  {
+        this.log("INFO", message);
+    }
+};

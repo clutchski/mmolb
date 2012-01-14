@@ -41,8 +41,9 @@
 
             // Set up change handlers.
             this.model.bind('change', _.bind(this.update, this));
-            //$(window).resize(_.bind(this.onResize, this));
+            $(window).resize(_.bind(this.onResize, this));
 
+            // Set the canvas dimensions and do the initial drawing.
             this.onResize();
         },
 
@@ -62,6 +63,7 @@
         onResize : function () {
             this.canvas.width = document.width;
             this.canvas.height = document.height;
+            this.update();
         },
 
         onMouseDown : function (event) {

@@ -24,6 +24,8 @@
 
         initialize : function (options) {
 
+            this.logger = new lumiere.Logger("ScreenView");
+
             // Our canvas object.
             this.canvas = document.getElementById('lights');
             this.context = this.canvas.getContext('2d');
@@ -61,8 +63,9 @@
         },
 
         onResize : function () {
-            this.canvas.width = document.width;
-            this.canvas.height = document.height;
+            this.canvas.width = $(window).width();
+            this.canvas.height = $(window).height();
+            this.logger.debug("Resizing canvas");
             this.update();
         },
 
@@ -93,6 +96,7 @@
                 var i = element.i;
                 var j = element.j;
                 this.trigger('element_selected', i, j);
+                this.logger.debug("selecting element");
             }
         },
 

@@ -97,26 +97,34 @@
         // Update the view based on the current state of the model.
         update : function () {
 
-            var width = this.el.width() + this.cellSize * this.paddingCells;
-            var height = this.el.height() + this.cellSize * this.paddingCells;
+            // Inline varibles accessed inside the loop for faster
+            // lookups.
+            var cellSize = this.cellSize;
+            var px = this.point.x;
+            var py = this.point.y;
 
-            // A clean slate.
+            // Calculate the current dimensions of the canvas.
+            var padding = cellSize * this.paddingCells;
+            var width = this.el.width() + padding;
+            var height = this.el.height() + padding;
+            var numx = width / cellSize;
+            var numy = height / cellSize;
+
+            // Calculate the points where we'll start drawing (could be
+            // a little bit off the canvas so we can scroll smoothly) and
+            // the offset of the part of the grid that's on screen.
+            var sx = px % cellSize - this.radius;
+            var sy = py % cellSize - this.radius;
+            var oi = Math.floor((px / cellSize));
+            var oj = Math.floor((py / cellSize));
+
+            // Clear the slate and draw the motherfucker.
             this.context.clearRect(0, 0, width, height);
-
-            var numx = width / this.cellSize;
-            var numy = height / this.cellSize;
-
-            var sx = this.point.x % this.cellSize - this.radius;
-            var sy = this.point.y % this.cellSize - this.radius;
-
-            var oi = Math.floor((this.point.x / this.cellSize));
-            var oj = Math.floor((this.point.y / this.cellSize));
-
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
                     var color = this.model.getElement(i - oi, j - oj) || '#666';
-                    var x = sx + (i * this.cellSize);
-                    var y = sy + (j * this.cellSize);
+                    var x = sx + (i * cellSize);
+                    var y = sy + (j * cellSize);
                     this.drawLight(x, y, color);
                 }
             }

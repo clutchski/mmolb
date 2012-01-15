@@ -41,10 +41,16 @@ io.configure(function () {
 
 io.sockets.on('connection', function (socket) {
     matrix.getMatrix(function (error, m) {
+        if (error) {
+            console.log('ERROR:\n' + error);
+        }
         socket.emit('matrix_updated', {'matrix': m});
     });
     socket.on('element_selected', function (element) {
-        matrix.setElement(element, function () {
+        matrix.setElement(element, function (error) {
+            if (error) {
+                console.log('ERROR:\n' + error);
+            }
             socket.broadcast.emit('element_selected', element);
         });
     });

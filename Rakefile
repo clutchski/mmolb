@@ -25,12 +25,14 @@ end
 
 desc 'Run the app.'
 task :run do
+  ENV['MONGO_URL'] = "mongo://localhost/lumiere"
   sh("node app.js")
 end
 
 desc 'Run the app in prod mode.'
 task :prod do
-  sh("NODE_ENV=production node app.js")
+  ENV["NODE_ENV"] = "production"
+  sh("node app.js")
 end
 
 desc 'Lint the code'

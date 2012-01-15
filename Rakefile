@@ -18,6 +18,11 @@ def notify(message)
   puts line
 end
 
+desc 'Run tests.'
+task :test do
+  sh("node_modules/.bin/vows tests/* --spec")
+end
+
 desc 'Clean up artifacts.'
 task :clean do
   sh("rm -rf builtAssets")

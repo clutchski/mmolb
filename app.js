@@ -4,7 +4,6 @@ var express = require('express'),
     routes = require('./routes'),
     matrix = require('./services/matrix');
 
-
 // Initialize and configure the server.
 var app = module.exports = express.createServer();
 app.configure(function () {
@@ -42,16 +41,20 @@ io.configure(function () {
 io.sockets.on('connection', function (socket) {
     matrix.getMatrix(function (error, m) {
         if (error) {
-            console.log('ERROR:\n' + error);
+            console.log('error :\n' + error);
+        } else {
+            console.log("sending matrix");
+            socket.emit('matrix_updated', {'matrix': m});
         }
-        socket.emit('matrix_updated', {'matrix': m});
     });
     socket.on('element_selected', function (element) {
         matrix.setElement(element, function (error) {
             if (error) {
                 console.log('ERROR:\n' + error);
+            } else {
+                console.log("sending element");
+                socket.broadcast.emit('element_selected', element);
             }
-            socket.broadcast.emit('element_selected', element);
         });
     });
 });

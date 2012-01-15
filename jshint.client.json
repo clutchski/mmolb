@@ -21,7 +21,8 @@
         "_",
         "lumiere",
         "Backbone",
-        "io"
+        "io",
+        "console"
     ],
 
     // Development.

@@ -7,7 +7,7 @@ var Mongolian = require('mongolian');
 
 
 // DB config. FIXME: this should live somewhere nicer.
-var url = process.env.MONGO_URL || 'mongodb://localhost/lumiere';
+var url = process.env.MONGOHQ_URL || 'mongodb://localhost/lumiere';
 
 console.log("connection to db " + url);
 

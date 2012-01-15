@@ -9,6 +9,8 @@ var Mongolian = require('mongolian');
 // DB config. FIXME: this should live somewhere nicer.
 var url = process.env.MONGOHQ_URL || 'mongodb://localhost/lumiere';
 
+console.log("connection to db " + url);
+
 // Initialize our db and collection.
 var db = new Mongolian(url);
 var elements = db.collection('elements');

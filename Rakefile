@@ -49,4 +49,6 @@ task :lint do
   notify("server linted")
 end
 
+task :dist => [:lint, :test]
+
 task :default => :run

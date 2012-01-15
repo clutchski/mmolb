@@ -1,28 +1,38 @@
-
-var matrix = [
-    ['red', 'green', 'yellow'],
-    [null, null, 'blue'],
-    []
-];
+//
+// The app's persistence layer.
+//
 
 
-for (var i = 0; i < 100; i++) {
-    matrix[2][i] = 'yellow';
-}
+var Mongolian = require('mongolian');
 
 
-/**
- * Return the light bright matrix.
- */
-exports.getMatrix = function () {
-    return matrix;
+// DB config. FIXME: this should live somewhere nicer.
+var url = process.env.MONGOHQ_URL || 'mongodb://localhost/lumiere';
+
+// Initialize our db and collection.
+var db = new Mongolian(url);
+var elements = db.collection('elements');
+
+
+// Return the entire matrix.
+exports.getMatrix = function (callback) {
+    elements.find().toArray(function (err, array) {
+        if (err) {
+            return callback(err);
+        }
+        var matrix = [];
+        array.forEach(function (e) {
+            matrix[e.i] = matrix[e.j] || [];
+            matrix[e.i][e.j] = e.color;
+        });
+        return callback(null, matrix);
+    });
 };
 
-
-/**
- * Set the given matrix element.
- */
-exports.setElement = function (i, j, color) {
-    matrix[i] = matrix[i] || [];
-    matrix[i][j] = color;
+// Update one element of the matrix to the given color.
+exports.setElement = function (element, callback) {
+    var query = {i: element.i, j: element.j};
+    elements.update(query, element, true, function (err) {
+        return callback(err);
+    });
 };

@@ -32,18 +32,21 @@ js.root  = '/javascripts';
 // Configure routes.
 app.get('/', routes.index);
 
-
 // Configure socket handlers.
 var io = socketio.listen(app);
 io.configure(function () {
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
 });
+
 io.sockets.on('connection', function (socket) {
-    socket.emit('matrix_updated', {'matrix': matrix.getMatrix()});
-    socket.on('element_selected', function (data) {
-        matrix.setElement(data.i, data.j, data.color);
-        socket.broadcast.emit('element_selected', data);
+    matrix.getMatrix(function (error, m) {
+        socket.emit('matrix_updated', {'matrix': m});
+    });
+    socket.on('element_selected', function (element) {
+        matrix.setElement(element, function () {
+            socket.broadcast.emit('element_selected', element);
+        });
     });
 });
 

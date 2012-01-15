@@ -35,6 +35,10 @@ app.get('/', routes.index);
 
 // Configure socket handlers.
 var io = socketio.listen(app);
+io.configure(function () {
+    io.set("transports", ["xhr-polling"]);
+    io.set("polling duration", 10);
+});
 io.sockets.on('connection', function (socket) {
     socket.emit('matrix_updated', {'matrix': matrix.getMatrix()});
     socket.on('element_selected', function (data) {

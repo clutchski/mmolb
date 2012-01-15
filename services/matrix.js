@@ -6,7 +6,7 @@ var mongo = require('mongodb');
 
 
 // The app's db url.
-var URI = process.env.MONGOLAB_URI || 'mongodb://localhost/lumiere';
+var URI = process.env.MONGOLAB_URI;
 
 
 // Return a connection to the mongo database via the callback.

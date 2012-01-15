@@ -30,7 +30,7 @@ end
 
 desc 'Run the app.'
 task :run do
-  ENV['MONGO_URL'] = "mongo://localhost/lumiere"
+  ENV['MONGOLAB_URI'] = "mongo://localhost/lumiere"
   sh("node app.js")
 end
 

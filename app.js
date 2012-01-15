@@ -1,3 +1,7 @@
+//
+// The application server.
+//
+
 var express = require('express'),
     socketio = require('socket.io'),
     connectAssets = require('connect-assets'),
@@ -25,15 +29,17 @@ app.configure('production', function () {
     app.use(connectAssets({build: true}));
 });
 
+// Configure asset roots.
 css.root = '/stylesheets';
 js.root  = '/javascripts';
 
 // Configure routes.
 app.get('/', routes.index);
 
-// Configure socket handlers.
+// Configure socket io.
 var io = socketio.listen(app);
 io.configure(function () {
+    // Heroku configuration.
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
 });

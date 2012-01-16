@@ -36,10 +36,9 @@ js.root  = '/javascripts';
 // Configure routes.
 app.get('/', routes.index);
 
-// Configure socket io.
+// Configure socket.io for Heroku.
 var io = socketio.listen(app);
 io.configure(function () {
-    // Heroku configuration.
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
 });

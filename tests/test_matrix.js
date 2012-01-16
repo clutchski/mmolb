@@ -33,10 +33,14 @@ vows.describe('Matrix').addBatch({
         topic : function () {
             var e1 = {i: 1, j: 1, color: 'yellow'};
             var e2 = {i: 0, j: 0, color: 'red'};
+            var e3 = {i: 1, j: 3, color: 'green'};
+            var e4 = {i: 1, j: 4, color: 'black'};
             var tasks = [
                 matrix.clear,
                 async.apply(matrix.setElement, e1),
                 async.apply(matrix.setElement, e2),
+                async.apply(matrix.setElement, e3),
+                async.apply(matrix.setElement, e4),
                 matrix.get
             ];
             var self = this;
@@ -50,6 +54,8 @@ vows.describe('Matrix').addBatch({
             assert.lengthOf(grid, 2);
             assert.equal(grid[0][0], 'red');
             assert.equal(grid[1][1], 'yellow');
+            assert.equal(grid[1][3], 'green');
+            assert.equal(grid[1][4], 'black');
         }
     }
 

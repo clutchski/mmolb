@@ -43,11 +43,11 @@ exports.get = function (callback) {
             if (e) {
                 return callback(e);
             }
-            var matrix = [];
-            array.forEach(function (e) {
-                matrix[e.i] = matrix[e.j] || [];
-                matrix[e.i][e.j] = e.color;
-            });
+            var matrix = array.reduce(function (m, e) {
+                m[e.i] = m[e.i] || [];
+                m[e.i][e.j] = e.color;
+                return m;
+            }, []);
             return callback(null, matrix);
         });
     });

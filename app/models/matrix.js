@@ -15,7 +15,6 @@ var connect = function (callback) {
         if (err) {
             return callback(err);
         }
-// Return the entire matrix.
 
         // Set up error handling.
         db.addListener("error", function (error) {

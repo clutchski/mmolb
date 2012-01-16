@@ -18,19 +18,20 @@ def notify(message)
   puts line
 end
 
-desc 'Run tests.'
-task :test do
-  sh("node_modules/.bin/vows tests/* --spec")
-end
-
 desc 'Clean up artifacts.'
 task :clean do
   sh("rm -rf builtAssets")
 end
 
+desc 'Run tests.'
+task :test do
+  ENV['MONGOLAB_URI'] = "mongo://localhost/lumiere-test"
+  sh("node_modules/.bin/vows tests/* --spec")
+end
+
 desc 'Run the app.'
 task :run do
-  ENV['MONGOLAB_URI'] = "mongo://localhost/lumiere"
+  ENV['MONGOLAB_URI'] = "mongo://localhost/lumiere-dev"
   sh("node app.js")
 end
 

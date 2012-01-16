@@ -40,6 +40,4 @@ $(function () {
         screenView.zoomOut();
     });
 
-
-
 });

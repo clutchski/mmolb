@@ -48,6 +48,8 @@ vows.describe('Matrix').addBatch({
         "populates the matrix" : function (grid) {
             assert.isArray(grid);
             assert.lengthOf(grid, 2);
+            assert.equal(grid[0][0], 'red');
+            assert.equal(grid[1][1], 'yellow');
         }
     }
 

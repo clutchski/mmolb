@@ -32,21 +32,21 @@ end
 desc 'Run the app.'
 task :run do
   ENV['MONGOLAB_URI'] = "mongo://localhost/lumiere-dev"
-  sh("node app.js")
+  sh("node server.js")
 end
 
 desc 'Run the app in prod mode.'
 task :prod do
   ENV["NODE_ENV"] = "production"
-  sh("node app.js")
+  sh("node server.js")
 end
 
 desc 'Lint the code'
 task :lint do
-  lint("jshint.client.json", ["assets/javascripts"])
+  lint("jshint.client.json", ["app/assets/javascripts"])
   notify("client linted")
 
-  lint("jshint.server.json", [".", "routes", "services"])
+  lint("jshint.server.json", [".", "tests", "app/routes", "app/services"])
   notify("server linted")
 end
 

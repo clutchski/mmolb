@@ -5,13 +5,13 @@
 var express = require('express'),
     socketio = require('socket.io'),
     connectAssets = require('connect-assets'),
-    routes = require('./routes'),
-    matrix = require('./services/matrix');
+    routes = require('./app/routes'),
+    matrix = require('./app/services/matrix');
 
 // Initialize and configure the server.
 var app = module.exports = express.createServer();
 app.configure(function () {
-    app.set('views', __dirname + '/views');
+    app.set('views', __dirname + '/app/views');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
@@ -21,12 +21,12 @@ app.configure(function () {
 
 app.configure('development', function () {
     app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
-    app.use(connectAssets());
+    app.use(connectAssets({src: 'app/assets'}));
 });
 
 app.configure('production', function () {
     app.use(express.errorHandler());
-    app.use(connectAssets({build: true}));
+    app.use(connectAssets({src: 'app/assets', build: true}));
 });
 
 // Configure asset roots.

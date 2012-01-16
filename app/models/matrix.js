@@ -3,6 +3,7 @@
 //
 
 var mongo = require('mongodb');
+var async = require('async');
 
 
 // The app's db url.
@@ -14,6 +15,7 @@ var connect = function (callback) {
         if (err) {
             return callback(err);
         }
+// Return the entire matrix.
 
         // Set up error handling.
         db.addListener("error", function (error) {
@@ -65,5 +67,12 @@ exports.setElement = function (element, callback) {
 
 // Clear the matrix.
 exports.clear = function (callback) {
-    callback();
+    var clearCollection = function (coll, callback) {
+        coll.remove({}, callback);
+    };
+    var tasks = [
+        async.apply(collection, 'elements'),
+        clearCollection
+    ];
+    async.waterfall(tasks, callback);
 };

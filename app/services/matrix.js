@@ -18,7 +18,7 @@ var connect = function (callback) {
 
         // Set up error handling.
         db.addListener("error", function (error) {
-            console.log("Error connecting to MongoLab:\n" + error);
+            console.log("Error connecting to db:\n" + error);
         });
 
         return callback(null, db);

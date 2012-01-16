@@ -38,10 +38,11 @@
             // FIXME: this is is whack
             var matrix = this.get('matrix') || [];
             var row = matrix[i] || [];
-            row[j] = (row[j] === color) ? null : color;
+            var newColor = row[j] = (row[j] === color) ? null : color;
             matrix[i] = row;
             this.set({matrix: matrix});
             this.trigger('change');
+            return newColor;
         },
 
         getElement : function (i, j) {

@@ -19,9 +19,9 @@ $(function () {
 
     var screenView = new lumiere.ScreenView({el: $('#lights'), model: screen});
     screenView.bind('element_selected', function (i, j) {
-        var color = palette.getColor();
-        screen.toggleElement(i, j, color);
-        socket.emit('element_selected', {i : i, j : j, color : color});
+        var paletteColor = palette.getColor();
+        var newColor = screen.toggleElement(i, j, paletteColor);
+        socket.emit('element_selected', {i : i, j : j, color : newColor});
     });
 
     socket.on('element_selected', function (data) {

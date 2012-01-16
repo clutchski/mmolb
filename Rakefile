@@ -46,7 +46,7 @@ task :lint do
   lint("jshint.client.json", ["app/assets/javascripts"])
   notify("client linted")
 
-  lint("jshint.server.json", [".", "tests", "app/routes", "app/services"])
+  lint("jshint.server.json", [".", "tests", "app/routes", "app/models"])
   notify("server linted")
 end
 

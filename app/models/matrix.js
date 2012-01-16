@@ -8,7 +8,6 @@ var mongo = require('mongodb');
 // The app's db url.
 var URI = process.env.MONGOLAB_URI;
 
-
 // Return a connection to the mongo database via the callback.
 var connect = function (callback) {
     mongo.connect(URI, {}, function (err, db) {
@@ -28,15 +27,13 @@ var connect = function (callback) {
 // Return a reference to a collection.
 var collection = function (name, callback) {
     connect(function (err, db) {
-        if (err) {
-            return callback(err);
-        }
+        if (err) return callback(err);
         return db.collection(name, callback);
     });
 };
 
-// Return the entire matrix.
-exports.getMatrix = function (callback) {
+// Return the contents of the matrix.
+exports.get = function (callback) {
     collection('elements', function (err, elements) {
         if (err) {
             return callback(err);
@@ -64,4 +61,9 @@ exports.setElement = function (element, callback) {
         var query = {i: element.i, j: element.j};
         elements.update(query, element, {upsert: true}, callback);
     });
+};
+
+// Clear the matrix.
+exports.clear = function (callback) {
+    callback();
 };

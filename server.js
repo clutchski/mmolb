@@ -6,7 +6,7 @@ var express = require('express'),
     socketio = require('socket.io'),
     connectAssets = require('connect-assets'),
     routes = require('./app/routes'),
-    matrix = require('./app/services/matrix');
+    matrix = require('./app/models/matrix');
 
 // Initialize and configure the server.
 var app = module.exports = express.createServer();
@@ -44,7 +44,7 @@ io.configure(function () {
 });
 
 io.sockets.on('connection', function (socket) {
-    matrix.getMatrix(function (error, m) {
+    matrix.get(function (error, m) {
         if (error) {
             console.log('error :\n' + error);
         } else {

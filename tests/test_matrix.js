@@ -26,7 +26,9 @@ vows.describe('Matrix').addBatch({
             assert.isArray(grid);
             assert.lengthOf(grid, 0);
         },
-    },
+    }
+
+}).addBatch({
 
     "Adding elements" : {
 
@@ -56,6 +58,31 @@ vows.describe('Matrix').addBatch({
             assert.equal(grid[1][1], 'yellow');
             assert.equal(grid[1][3], 'green');
             assert.equal(grid[1][4], 'black');
+        }
+    },
+
+}).addBatch({
+
+    "Unsetting elements" : {
+
+        topic : function () {
+            var e1 = {i: 0, j: 0, color: 'red'};
+            var e2 = {i: 0, j: 0, color: null};
+            var tasks = [
+                matrix.clear,
+                async.apply(matrix.setElement, e1),
+                async.apply(matrix.setElement, e2),
+                matrix.get
+            ];
+            var self = this;
+            async.series(tasks, function (err, results) {
+                self.callback(err, results.pop());
+            });
+        },
+
+        "leaves color null" : function (grid) {
+            assert.isArray(grid);
+            assert.equal(grid[0][0], null);
         }
     }
 

@@ -1,5 +1,17 @@
-mmolb
------
+MMOLB
+=====
 
-want to draw a double rainbow with your friends on an virtual light brite? then
+Want to draw a double rainbow with your friends on an virtual light brite? Then
 stay tuned ...
+
+Contribute
+----------
+
+To set-up your environment, follow these steps:
+
+- install node
+- install npm
+- run `npm install`
+- install mongodb
+- start mongodb
+- run `rake`

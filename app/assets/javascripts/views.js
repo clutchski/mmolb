@@ -136,29 +136,6 @@
             }
         },
 
-        /**
-         * Return the element that the given touch event touched.
-         */
-        getEventElement : function (e) {
-            var r = Math.floor;
-            var p = this.getEventPoint(e);
-            return {
-                i : r((p.x - this.point.x) / this.cellSize) + 1,
-                j : r((p.y - this.point.y) / this.cellSize) + 1
-            };
-        },
-
-        /**
-         * Return the position of the given event relative to the canvas
-         * boundary.
-         */
-        getEventPoint : function (event) {
-            return {
-                x : event.pageX - event.target.offsetLeft,
-                y : event.pageY - event.target.offsetTop
-            };
-        },
-
         drawLight : function (x, y, color) {
             this.context.save();
             var fillStyle = '#222';
@@ -181,6 +158,30 @@
             this.context.restore();
 
 
+        },
+
+
+        /**
+         * Return the element that the given touch event touched.
+         */
+        getEventElement : function (e) {
+            var r = Math.floor;
+            var p = this.getEventPoint(e);
+            return {
+                i : r((p.x - this.point.x) / this.cellSize) + 1,
+                j : r((p.y - this.point.y) / this.cellSize) + 1
+            };
+        },
+
+        /**
+         * Return the position of the given event relative to the canvas
+         * boundary.
+         */
+        getEventPoint : function (event) {
+            return {
+                x : event.pageX - event.target.offsetLeft,
+                y : event.pageY - event.target.offsetTop
+            };
         },
 
         setCellSize : function (size) {

@@ -22,7 +22,8 @@
         "lumiere",
         "Backbone",
         "io",
-        "console"
+        "console",
+        "Color"
     ],
 
     // Development.

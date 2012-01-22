@@ -128,7 +128,7 @@
             this.context.clearRect(0, 0, width, height);
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
-                    var color = this.model.getElement(i - oi, j - oj) || '#666';
+                    var color = this.model.getElement(i - oi, j - oj) || '#111';
                     var x = sx + (i * cellSize);
                     var y = sy + (j * cellSize);
                     this.drawLight(x, y, color);
@@ -160,10 +160,26 @@
         },
 
         drawLight : function (x, y, color) {
-            this.context.fillStyle = color;
+            this.context.save();
+            var fillStyle = '#222';
+            if (color !== '#111') {
+                this.context.shadowColor = 'white';
+                this.context.shadowBlur = this.radius * 0.2;
+            }
+            var c = new Color(color).lighten(0.4).saturate(0.5);
+            var grad = this.context.createRadialGradient(x - 2, y - 2, 1, x, y, this.radius);
+            grad.addColorStop(0, c.lighten(0.01).rgbString());
+            grad.addColorStop(0.1, c.rgbString());
+            grad.addColorStop(0.8, c.darken(0.5).rgbString());
+
+            fillStyle = grad;
+            this.context.fillStyle = fillStyle;
             this.context.beginPath();
             this.context.arc(x, y, this.radius, 0, Math.PI * 2);
             this.context.fill();
+            this.context.restore();
+
+
         },
 
         setCellSize : function (size) {

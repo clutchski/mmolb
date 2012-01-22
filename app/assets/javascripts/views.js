@@ -163,10 +163,11 @@
             this.context.save();
             var fillStyle = '#222';
             if (color !== '#111') {
-                this.context.shadowColor = 'white';
+                this.context.shadowColor = new
+                    Color(color).lighten(0.6).rgbString();
                 this.context.shadowBlur = this.radius * 0.2;
             }
-            var c = new Color(color).lighten(0.4).saturate(0.5);
+            var c = new Color(color).lighten(0.2).saturate(0.5);
             var grad = this.context.createRadialGradient(x - 2, y - 2, 1, x, y, this.radius);
             grad.addColorStop(0, c.lighten(0.01).rgbString());
             grad.addColorStop(0.1, c.rgbString());

@@ -38,7 +38,7 @@
             this.paddingCells = 2;
 
             // Initial light dimensions in pixels.
-            this.cellSize = 20;
+            this.cellSize = 40;
             this.radius = this.cellSize * 0.40;
 
             // Set up change handlers.

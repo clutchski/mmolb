@@ -4,19 +4,25 @@
 
 $(function () {
 
-    // Set-up sockets.
-    var socket = io.connect(window.location.origin);
-    // Models.
-    var palette = new lumiere.Palette();
-    var matrix = [];
-    var screen = new lumiere.Screen({matrix : matrix});
 
-    // Screen.
+    // Initialize the logger.
+    var logger = new lumiere.Logger('app');
+    logger.debug("initializing");
+
+    // Initialize our sockets.
+    var socket = io.connect(window.location.origin);
+
+    // Initialize our models.
+    var palette = new lumiere.Palette();
+    var screen = new lumiere.Screen();
+
+    // Initalize our views.
     var paletteView = new lumiere.PaletteView({el: $('#palette'), model: palette});
     paletteView.bind('color_selected', function (color) {
         palette.setColor(color);
     });
 
+    // Set up view event listeners.
     var screenView = new lumiere.ScreenView({el: $('#lights'), model: screen});
     screenView.bind('element_selected', function (i, j) {
         var paletteColor = palette.getColor();
@@ -24,7 +30,7 @@ $(function () {
         socket.emit('element_selected', {i : i, j : j, color : newColor});
     }).bind('mouse_move', function (i, j) {
         socket.emit('mouse_move', {i: i, j: j});
-        console.log('emitted');
+        logger.debug('emitted');
     });
 
     socket.on('element_selected', function (data) {
@@ -37,7 +43,7 @@ $(function () {
 
     socket.on('mouse_move', function (data) {
         screen.setMousePosition(data.userId, data.i, data.j);
-        console.log('got mouse move');
+        logger.debug('got mouse move');
     });
 
     var zoomView = new lumiere.ZoomView({el: $('#zoomers')});

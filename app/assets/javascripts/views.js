@@ -101,7 +101,7 @@
         },
 
         // Update the view based on the current state of the model.
-        update : function () {
+        update : _.throttle(function () {
 
             // Inline varibles accessed inside the loop for faster
             // lookups.
@@ -126,38 +126,55 @@
 
             // Clear the slate and draw the motherfucker.
             this.context.clearRect(0, 0, width, height);
+            this.drawLights(numx, numy, sx, sy, oi, oj);
+        }, 10),
+
+        drawLights : function (numx, numy, sx, sy, oi, oj) {
+            // Inline variables.
+            var cellSize = this.cellSize;
+            var context = this.context;
+            var model = this.model;
+            var radius = this.radius;
+            var twoPI = Math.PI * 2;
+            var blur = this.radius / 4;
+
+            this.colors = this.colors || {};
+            var colors = this.colors;
+
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
-                    var color = this.model.getElement(i - oi, j - oj) || '#111';
+
                     var x = sx + (i * cellSize);
                     var y = sy + (j * cellSize);
-                    this.drawLight(x, y, color);
+
+                    var color = model.getElement(i - oi, j - oj) || '#222';
+
+                    var borderKey = color + '__b';
+                    var lightKey = color + '__l';
+                    var darkKey = color + '__d';
+
+                    if (!this.colors[color]) {
+                        var c = new Color(color).lighten(0.2).saturate(0.5);
+                        colors[color] = c.rgbString();
+                        colors[borderKey] = c.lighten(0.01).rgbString();
+                        colors[lightKey] = c.lighten(0.02).rgbString();
+                        colors[darkKey] = c.darken(0.5).rgbString();
+                    }
+
+                    if (color !== '#111') {
+                        context.shadowColor = colors[borderKey];
+                        context.shadowBlur = blur;
+                    }
+                    var grad = context.createRadialGradient(x - 2, y - 2, radius/6, x, y, radius);
+                    grad.addColorStop(0, colors[lightKey]);
+                    grad.addColorStop(0.8, colors[darkKey])
+
+                    context.fillStyle = grad;
+                    context.beginPath();
+                    context.arc(x, y, radius, 0, twoPI);
+                    context.fill();
                 }
             }
-        },
-
-        drawLight : function (x, y, color) {
-            this.context.save();
-            var fillStyle = '#222';
-            if (color !== '#111') {
-                this.context.shadowColor = new
-                    Color(color).lighten(0.6).rgbString();
-                this.context.shadowBlur = this.radius * 0.2;
-            }
-            var c = new Color(color).lighten(0.2).saturate(0.5);
-            var grad = this.context.createRadialGradient(x - 2, y - 2, 1, x, y, this.radius);
-            grad.addColorStop(0, c.lighten(0.01).rgbString());
-            grad.addColorStop(0.1, c.rgbString());
-            grad.addColorStop(0.8, c.darken(0.5).rgbString());
-
-            fillStyle = grad;
-            this.context.fillStyle = fillStyle;
-            this.context.beginPath();
-            this.context.arc(x, y, this.radius, 0, Math.PI * 2);
-            this.context.fill();
-            this.context.restore();
-
-
         },
 
 

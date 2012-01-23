@@ -19,7 +19,8 @@
     lumiere.ScreenView = Backbone.View.extend({
 
         events : {
-            'mousedown' : 'onMouseDown'
+            'mousedown' : 'onMouseDown',
+            'mousemove' : 'trackMouseMove'
         },
 
         initialize : function (options) {
@@ -100,6 +101,11 @@
             }
         },
 
+        trackMouseMove : _.throttle(function (event) {
+            var e = this.getEventElement(event);
+            this.trigger('mouse_move', e.i, e.j);
+        }, 500),
+
         // Update the view based on the current state of the model.
         update : _.throttle(function () {
 
@@ -136,6 +142,7 @@
             // Clear the slate and draw the motherfucker.
             this.context.clearRect(0, 0, width, height);
             this.drawLights(numx, numy, sx, sy, oi, oj);
+            this.drawMousePositions(sx, sy, oi, oj);
         }, 10),
 
         drawLights : function (numx, numy, sx, sy, oi, oj) {
@@ -202,6 +209,26 @@
             }
         },
 
+        drawMousePositions : function (sx, sy, oi, oj) {
+
+            this.context.save();
+            this.context.lineWidth = 2;
+            this.context.strokeStyle = '#aaa';
+            this.context.shadowColor = '#fff';
+            this.context.shadowBlur = 4;
+
+            _.each(this.model.getMousePositions(), function (pos, userId) {
+
+                var x = pos.i * this.cellSize - this.radius;
+                var y = pos.j * this.cellSize - this.radius;
+                this.context.beginPath();
+                this.context.arc(x, y, this.radius, 0, Math.PI * 2);
+                this.context.stroke();
+
+            }, this);
+
+            this.context.restore();
+        },
 
         /**
          * Return the element that the given touch event touched.

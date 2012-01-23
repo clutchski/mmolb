@@ -10,7 +10,7 @@
     lumiere.Palette = Backbone.Model.extend({
 
         defaults : {
-            'color' : 'yellow',
+            'color' : 'yellow'
         },
 
         setColor : function (color) {
@@ -27,6 +27,11 @@
      * The screen that lights get applied to.
      */
     lumiere.Screen = Backbone.Model.extend({
+
+        defaults : {
+            matrix: [],
+            mousePositions: {}
+        },
 
         toggleElement : function (i, j, color) {
             // FIXME: this is is whack
@@ -46,6 +51,15 @@
 
         getRow : function (i) {
             return this.get('matrix')[i] || null;
+        },
+
+        setMousePosition : function (userId, i, j) {
+            this.attributes.mousePositions[userId] = {i: i, j: j};
+            this.trigger('change');
+        },
+
+        getMousePositions : function () {
+            return this.get('mousePositions');
         }
 
     });

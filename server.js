@@ -62,6 +62,12 @@ io.sockets.on('connection', function (socket) {
             }
         });
     });
+
+    socket.on('mouse_move', function (data) {
+        data['userId'] = socket.id;
+        socket.broadcast.emit('mouse_move', data);
+    });
+
 });
 
 // Start 'er up.

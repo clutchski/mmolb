@@ -22,6 +22,9 @@ $(function () {
         var paletteColor = palette.getColor();
         var newColor = screen.toggleElement(i, j, paletteColor);
         socket.emit('element_selected', {i : i, j : j, color : newColor});
+    }).bind('mouse_move', function (i, j) {
+        socket.emit('mouse_move', {i: i, j: j});
+        console.log('emitted');
     });
 
     socket.on('element_selected', function (data) {
@@ -30,6 +33,11 @@ $(function () {
 
     socket.on('matrix_updated', function (data) {
         screen.set({'matrix': data.matrix});
+    });
+
+    socket.on('mouse_move', function (data) {
+        screen.setMousePosition(data.userId, data.i, data.j);
+        console.log('got mouse move');
     });
 
     var zoomView = new lumiere.ZoomView({el: $('#zoomers')});

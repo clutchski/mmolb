@@ -124,6 +124,11 @@
             var oi = Math.floor((px / cellSize));
             var oj = Math.floor((py / cellSize));
 
+            // Handle negative regions. FIXME: there must be a cleaner
+            // way to do this.
+            if (px < 0 && px % cellSize !== 0) oi++;
+            if (py < 0 && py % cellSize !== 0) oj++;
+
             // Clear the slate and draw the motherfucker.
             this.context.clearRect(0, 0, width, height);
             this.drawLights(numx, numy, sx, sy, oi, oj);

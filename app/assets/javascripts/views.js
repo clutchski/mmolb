@@ -126,8 +126,12 @@
 
             // Handle negative regions. FIXME: there must be a cleaner
             // way to do this.
-            if (px < 0 && px % cellSize !== 0) oi++;
-            if (py < 0 && py % cellSize !== 0) oj++;
+            if (px < 0 && px % cellSize !== 0) {
+                oi++;
+            }
+            if (py < 0 && py % cellSize !== 0) {
+                oj++;
+            }
 
             // Clear the slate and draw the motherfucker.
             this.context.clearRect(0, 0, width, height);
@@ -170,9 +174,9 @@
                         context.shadowColor = colors[borderKey];
                         context.shadowBlur = blur;
                     }
-                    var grad = context.createRadialGradient(x - 2, y - 2, radius/6, x, y, radius);
+                    var grad = context.createRadialGradient(x - 2, y - 2, radius / 6, x, y, radius);
                     grad.addColorStop(0, colors[lightKey]);
-                    grad.addColorStop(0.8, colors[darkKey])
+                    grad.addColorStop(0.8, colors[darkKey]);
 
                     context.fillStyle = grad;
                     context.beginPath();

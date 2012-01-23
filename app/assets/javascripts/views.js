@@ -139,49 +139,65 @@
         }, 10),
 
         drawLights : function (numx, numy, sx, sy, oi, oj) {
-            // Inline variables.
+            // Inline frequently used variables.
             var cellSize = this.cellSize;
             var context = this.context;
             var model = this.model;
             var radius = this.radius;
             var twoPI = Math.PI * 2;
-            var blur = this.radius / 4;
+            var blurSize = radius / 4;
+            var reflectionRadius = radius / 6;
 
-            this.colors = this.colors || {};
-            var colors = this.colors;
+            // A cache for color calculations
+            var colorCache = this.colorCache = this.colorCache || {};
 
             for (var i = 0; i < numx; i++) {
                 for (var j = 0; j < numy; j++) {
 
+                    // Save the context state;
+                    context.save();
+
+                    // Calculate the center of the light.
                     var x = sx + (i * cellSize);
                     var y = sy + (j * cellSize);
 
-                    var color = model.getElement(i - oi, j - oj) || '#222';
+                    // Fetch the state of the current light.
+                    var color = model.getElement(i - oi, j - oj);
 
-                    var borderKey = color + '__b';
-                    var lightKey = color + '__l';
-                    var darkKey = color + '__d';
+                    // The default fill style for a light that is off.
+                    var fillStyle = '#111';
 
-                    if (!this.colors[color]) {
-                        var c = new Color(color).lighten(0.2).saturate(0.5);
-                        colors[color] = c.rgbString();
-                        colors[borderKey] = c.lighten(0.01).rgbString();
-                        colors[lightKey] = c.lighten(0.02).rgbString();
-                        colors[darkKey] = c.darken(0.5).rgbString();
+                    if (color) {
+
+                        // Cache the gradients of the current color.
+                        var borderKey = color + '__b';
+                        var lightKey = color + '__l';
+                        var darkKey = color + '__d';
+                        if (!colorCache[color]) {
+                            var c = new Color(color).lighten(0.2).saturate(0.5);
+                            colorCache[color] = c.rgbString();
+                            colorCache[borderKey] = c.lighten(0.01).rgbString();
+                            colorCache[lightKey] = c.lighten(0.02).rgbString();
+                            colorCache[darkKey] = c.darken(0.5).rgbString();
+                        }
+
+                        // Set the fill style for the given color.
+                        context.shadowColor = colorCache[borderKey];
+                        context.shadowBlur = blurSize;
+                        fillStyle = context.createRadialGradient(x - 2, y - 2,
+                                reflectionRadius, x, y, radius);
+                        fillStyle.addColorStop(0, colorCache[lightKey]);
+                        fillStyle.addColorStop(0.8, colorCache[darkKey]);
                     }
 
-                    if (color !== '#111') {
-                        context.shadowColor = colors[borderKey];
-                        context.shadowBlur = blur;
-                    }
-                    var grad = context.createRadialGradient(x - 2, y - 2, radius / 6, x, y, radius);
-                    grad.addColorStop(0, colors[lightKey]);
-                    grad.addColorStop(0.8, colors[darkKey]);
-
-                    context.fillStyle = grad;
+                    // Actually draw the light.
+                    context.fillStyle = fillStyle;
                     context.beginPath();
                     context.arc(x, y, radius, 0, twoPI);
                     context.fill();
+
+                    // Now restore the context state;
+                    context.restore();
                 }
             }
         },

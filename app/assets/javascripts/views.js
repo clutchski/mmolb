@@ -177,7 +177,7 @@
                             var c = new Color(color).lighten(0.2).saturate(0.5);
                             colorCache[color] = c.rgbString();
                             colorCache[borderKey] = c.lighten(0.01).rgbString();
-                            colorCache[lightKey] = c.lighten(0.02).rgbString();
+                            colorCache[lightKey] = c.rgbString();
                             colorCache[darkKey] = c.darken(0.5).rgbString();
                         }
 

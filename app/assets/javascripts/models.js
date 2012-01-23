@@ -11,7 +11,6 @@
 
         defaults : {
             'color' : 'yellow',
-            'colors' : ['red', 'green', 'blue', 'yellow']
         },
 
         setColor : function (color) {
@@ -20,12 +19,7 @@
 
         getColor : function () {
             return this.get('color');
-        },
-
-        getColors : function () {
-            return this.get('colors');
         }
-
     });
 
 

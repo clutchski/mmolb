@@ -35,6 +35,7 @@ js.root  = '/javascripts';
 
 // Configure routes.
 app.get('/', routes.index);
+app.get('/about', routes.about);
 
 // Configure socket.io for Heroku.
 var io = socketio.listen(app);

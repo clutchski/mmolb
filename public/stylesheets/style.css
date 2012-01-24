@@ -38,6 +38,8 @@ h1, h2 {
 #title {
   display:inline;
   float:left;
+  position:relative;
+  top:-10px;
   font-size:40px;
 }
 #palette {

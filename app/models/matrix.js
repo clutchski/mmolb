@@ -50,10 +50,10 @@ exports.get = function (callback) {
                 return callback(e);
             }
             var m = {};
-            for(var i = 0; i < array.length; i++) {
-                var e = array[i];
-                m[e.i] = m[e.i] || {};
-                m[e.i][e.j] = e.color;
+            for (var i = 0; i < array.length; i++) {
+                var el = array[i];
+                m[el.i] = m[el.i] || {};
+                m[el.i][el.j] = el.color;
             }
             return callback(null, m);
         });

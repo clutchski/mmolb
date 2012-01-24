@@ -49,12 +49,13 @@ exports.get = function (callback) {
             if (e) {
                 return callback(e);
             }
-            var matrix = array.reduce(function (m, e) {
-                m[e.i] = m[e.i] || [];
+            var m = {};
+            for(var i = 0; i < array.length; i++) {
+                var e = array[i];
+                m[e.i] = m[e.i] || {};
                 m[e.i][e.j] = e.color;
-                return m;
-            }, []);
-            return callback(null, matrix);
+            }
+            return callback(null, m);
         });
     });
 };

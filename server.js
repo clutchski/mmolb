@@ -9,10 +9,10 @@ var express = require('express'),
     matrix = require('./app/models/matrix'),
     Logger = require('./app/lib/logger');
 
+
 // Initialize and configure the server.
 var logger = new Logger("server");
 logger.info("Initializing server");
-
 
 var app = module.exports = express.createServer();
 app.configure(function () {

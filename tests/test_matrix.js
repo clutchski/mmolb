@@ -23,8 +23,8 @@ vows.describe('Matrix').addBatch({
         },
 
         "empties the matrix" : function (grid) {
-            assert.isArray(grid);
-            assert.lengthOf(grid, 0);
+            assert.isObject(grid);
+            assert.isEmpty(grid);
         },
     }
 
@@ -52,8 +52,7 @@ vows.describe('Matrix').addBatch({
         },
 
         "populates the matrix" : function (grid) {
-            assert.isArray(grid);
-            assert.lengthOf(grid, 2);
+            assert.isObject(grid);
             assert.equal(grid[0][0], 'red');
             assert.equal(grid[1][1], 'yellow');
             assert.equal(grid[1][3], 'green');
@@ -81,7 +80,7 @@ vows.describe('Matrix').addBatch({
         },
 
         "leaves color null" : function (grid) {
-            assert.isArray(grid);
+            assert.isObject(grid);
             assert.equal(grid[0][0], null);
         }
     }

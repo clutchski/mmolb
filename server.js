@@ -84,6 +84,12 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('mouse_move', data);
     });
 
+    // Finally, disconnect the socket when it's done.
+    socket.on('disconnect', function () {
+        logger.info("received 'disconnect' - #" + socket.id);
+        socket = null;
+    });
+
 });
 
 // Start 'er up.

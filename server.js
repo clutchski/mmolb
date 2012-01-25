@@ -2,7 +2,8 @@
 // The application server.
 //
 
-var express = require('express'),
+var util = require('util'),
+    express = require('express'),
     socketio = require('socket.io'),
     connectAssets = require('connect-assets'),
     routes = require('./app/routes'),
@@ -91,6 +92,11 @@ io.sockets.on('connection', function (socket) {
     });
 
 });
+
+// Log memory usage every once in a while.
+setInterval(function () {
+    logger.info("memory usage: " + util.inspect(process.memoryUsage()));
+}, 10000);
 
 // Start 'er up.
 app.listen(process.env.PORT || 5000);

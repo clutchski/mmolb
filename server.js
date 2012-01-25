@@ -6,9 +6,14 @@ var express = require('express'),
     socketio = require('socket.io'),
     connectAssets = require('connect-assets'),
     routes = require('./app/routes'),
-    matrix = require('./app/models/matrix');
+    matrix = require('./app/models/matrix'),
+    Logger = require('./app/lib/logger');
 
 // Initialize and configure the server.
+var logger = new Logger("server");
+logger.info("Initializing server");
+
+
 var app = module.exports = express.createServer();
 app.configure(function () {
     app.set('views', __dirname + '/app/views');
@@ -45,27 +50,37 @@ io.configure(function () {
 });
 
 io.sockets.on('connection', function (socket) {
+
+    // On socket connection, send down the matrix.
+    logger.info("sock#" + socket.id + " connected");
     matrix.get(function (error, m) {
         if (error) {
-            console.log('error :\n' + error);
+            logger.error('error fetching matrix: ' + error);
+            return;
         } else {
-            console.log("sending matrix");
+            logger.info("Sending matrix to sock#" + socket.id);
             socket.emit('matrix_updated', {'matrix': m});
         }
     });
+
+    // Add element element selected handler.
     socket.on('element_selected', function (element) {
+        logger.info("recieved 'element_selected' - #" + socket.id);
         matrix.setElement(element, function (error) {
             if (error) {
-                console.log('ERROR:\n' + error);
+                logger.error('Error setting el #' + socket.id + '.' + error);
             } else {
-                console.log("sending element");
+                logger.info("broadcasting 'element_selected' - #" + socket.id);
                 socket.broadcast.emit('element_selected', element);
             }
         });
     });
 
+    // Add mouse move handler.
     socket.on('mouse_move', function (data) {
+        logger.info("received 'mouse_move' - #" + socket.id);
         data.userId = socket.id;
+        logger.info("broadcasting 'mouse_move' - #" + socket.id);
         socket.broadcast.emit('mouse_move', data);
     });
 

@@ -50,6 +50,9 @@ task :lint do
   notify("server linted")
 end
 
-task :dist => [:lint, :test]
+desc 'Deploy'
+task :deploy => [:lint, :test] do
+  sh("git push heroku master")
+end
 
 task :default => :run

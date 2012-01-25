@@ -50,7 +50,12 @@ io.configure(function () {
     io.set("polling duration", 10);
 });
 
+// The number of socket connections.
+var socketCount = 0;
+
 io.sockets.on('connection', function (socket) {
+
+    socketCount += 1;
 
     // On socket connection, send down the matrix.
     logger.info("sock#" + socket.id + " connected");
@@ -87,6 +92,7 @@ io.sockets.on('connection', function (socket) {
 
     // Finally, disconnect the socket when it's done.
     socket.on('disconnect', function () {
+        socketCount -= 1;
         logger.info("received 'disconnect' - #" + socket.id);
         socket = null;
     });
@@ -95,6 +101,8 @@ io.sockets.on('connection', function (socket) {
 
 // Log memory usage every once in a while.
 setInterval(function () {
+    logger.info("Status");
+    logger.info("socketCount: " + socketCount);
     logger.info("memory usage: " + util.inspect(process.memoryUsage()));
 }, 10000);
 

@@ -66,11 +66,13 @@ vows.describe('Matrix').addBatch({
 
         topic : function () {
             var e1 = {i: 0, j: 0, color: 'red'};
-            var e2 = {i: 0, j: 0, color: null};
+            var e2 = {i: 0, j: 1, color: 'red'};
+            var e3 = {i: 0, j: 0, color: null};
             var tasks = [
                 matrix.clear,
                 async.apply(matrix.setElement, e1),
                 async.apply(matrix.setElement, e2),
+                async.apply(matrix.setElement, e3),
                 matrix.get
             ];
             var self = this;
@@ -79,9 +81,10 @@ vows.describe('Matrix').addBatch({
             });
         },
 
-        "leaves color null" : function (grid) {
+        "removes them from the grid" : function (grid) {
             assert.isObject(grid);
-            assert.equal(grid[0][0], null);
+            assert.isUndefined(grid[0][0]);
+            assert.ok(grid[0][1]);
         }
     }
 

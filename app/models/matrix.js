@@ -67,7 +67,11 @@ exports.setElement = function (element, callback) {
             return callback(err);
         }
         var query = {i: element.i, j: element.j};
-        elements.update(query, element, {upsert: true}, callback);
+        if (element.color) {
+            return elements.update(query, element, {upsert: true}, callback);
+        } else {
+            return elements.remove(query, callback);
+        }
     });
 };
 

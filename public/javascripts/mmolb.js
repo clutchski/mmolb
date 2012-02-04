@@ -16,7 +16,7 @@
  *  through which recipients can access the Corresponding Source.
  */
 
-(function () {
+$(function () {
 
     // mmolb's namespace.
     window.mmolb = {};
@@ -413,11 +413,6 @@
         }
 
     });
-
-})();
-
-$(function () {
-
 
     // Initialize the logger.
     var logger = new mmolb.Logger('app');

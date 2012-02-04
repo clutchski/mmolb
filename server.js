@@ -5,7 +5,6 @@
 var util = require('util'),
     express = require('express'),
     socketio = require('socket.io'),
-    connectAssets = require('connect-assets'),
     routes = require('./app/routes'),
     matrix = require('./app/models/matrix'),
     Logger = require('./app/lib/logger');
@@ -27,17 +26,11 @@ app.configure(function () {
 
 app.configure('development', function () {
     app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
-    app.use(connectAssets({src: 'app/assets'}));
 });
 
 app.configure('production', function () {
     app.use(express.errorHandler());
-    app.use(connectAssets({src: 'app/assets', build: true}));
 });
-
-// Configure asset roots.
-css.root = '/stylesheets';
-js.root  = '/javascripts';
 
 // Configure routes.
 app.get('/', routes.index);

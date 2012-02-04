@@ -1,8 +1,119 @@
-//= require lumiere
+/**
+ *  Copyright (C) 2011 Matthew Perpick
+ *
+ *  The JavaScript code in this page is free software: you can
+ *  redistribute it and/or modify it under the terms of the GNU
+ *  General Public License (GNU GPL) as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option)
+ *  any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS
+ *  FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ *  As additional permission under GNU GPL version 3 section 7, you
+ *  may distribute non-source (e.g., minimized or compacted) forms of
+ *  that code without the copy of the GNU GPL normally required by
+ *  section 4, provided you include this license notice and a URL
+ *  through which recipients can access the Corresponding Source.
+ */
 
 (function () {
 
-    // Helper functions.
+    // Our app's global namespace.
+    window.lumiere = {};
+
+    //
+    // Utility functions and classes.
+    //
+
+    lumiere.Logger = function (namespace) {
+        this.namespace = namespace;
+    };
+
+    lumiere.Logger.prototype = {
+
+        log : function (level, message) {
+            if (console) {
+                var fields = [this.namespace, level, message];
+                console.log(fields.join(" | "));
+            }
+        },
+
+        debug : function (message) {
+            this.log("DEBUG", message);
+        },
+
+        info : function (message)  {
+            this.log("INFO", message);
+        }
+    };
+
+    //
+    // Models.
+    //
+
+    /**
+     * The palette represents colors available to the user.
+     */
+    lumiere.Palette = Backbone.Model.extend({
+
+        defaults : {
+            'color' : 'yellow'
+        },
+
+        setColor : function (color) {
+            this.set({'color': color});
+        },
+
+        getColor : function () {
+            return this.get('color');
+        }
+    });
+
+
+    /**
+     * The screen that lights get applied to.
+     */
+    lumiere.Screen = Backbone.Model.extend({
+
+        defaults : {
+            matrix: [],
+            mousePositions: {}
+        },
+
+        toggleElement : function (i, j, color) {
+            // FIXME: this is is whack
+            var matrix = this.get('matrix') || [];
+            var row = matrix[i] || [];
+            var newColor = row[j] = (row[j] === color) ? null : color;
+            matrix[i] = row;
+            this.set({matrix: matrix});
+            this.trigger('change');
+            return newColor;
+        },
+
+        getElement : function (i, j) {
+            var row = this.getRow(i);
+            return row ? row[j] : null;
+        },
+
+        getRow : function (i) {
+            return this.get('matrix')[i] || null;
+        },
+
+        setMousePosition : function (userId, i, j) {
+            this.attributes.mousePositions[userId] = {i: i, j: j};
+            this.trigger('change');
+        },
+
+        getMousePositions : function () {
+            return this.get('mousePositions');
+        }
+
+    });
+
+    //
+    // Views.
+    //
 
     var addPoints = function (a, b) {
         return {x: a.x + b.x, y: a.y + b.y};
@@ -314,3 +425,57 @@
     });
 
 })();
+
+$(function () {
+
+
+    // Initialize the logger.
+    var logger = new lumiere.Logger('app');
+    logger.debug("initializing");
+
+    // Initialize our sockets.
+    var socket = io.connect(window.location.origin);
+
+    // Initialize our models.
+    var palette = new lumiere.Palette();
+    var screen = new lumiere.Screen();
+
+    // Initalize our views.
+    var paletteView = new lumiere.PaletteView({el: $('#palette'), model: palette});
+    paletteView.bind('color_selected', function (color) {
+        palette.setColor(color);
+    });
+
+    // Set up view event listeners.
+    var screenView = new lumiere.ScreenView({el: $('#lights'), model: screen});
+    screenView.bind('element_selected', function (i, j) {
+        var paletteColor = palette.getColor();
+        var newColor = screen.toggleElement(i, j, paletteColor);
+        socket.emit('element_selected', {i : i, j : j, color : newColor});
+    }).bind('mouse_move', function (i, j) {
+        socket.emit('mouse_move', {i: i, j: j});
+        logger.debug('emitted');
+    });
+
+    socket.on('element_selected', function (data) {
+        screen.toggleElement(data.i, data.j, data.color);
+    });
+
+    socket.on('matrix_updated', function (data) {
+        screen.set({'matrix': data.matrix});
+    });
+
+    socket.on('mouse_move', function (data) {
+        screen.setMousePosition(data.userId, data.i, data.j);
+        logger.debug('got mouse move');
+    });
+
+    var zoomView = new lumiere.ZoomView({el: $('#zoomers')});
+    zoomView.bind('zoom_in', function () {
+        screenView.zoomIn();
+    });
+    zoomView.bind('zoom_out', function () {
+        screenView.zoomOut();
+    });
+
+});

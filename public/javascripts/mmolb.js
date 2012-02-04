@@ -18,18 +18,19 @@
 
 (function () {
 
-    // Our app's global namespace.
-    window.lumiere = {};
+    // mmolb's namespace.
+    window.mmolb = {};
+
 
     //
     // Utility functions and classes.
     //
 
-    lumiere.Logger = function (namespace) {
+    mmolb.Logger = function (namespace) {
         this.namespace = namespace;
     };
 
-    lumiere.Logger.prototype = {
+    mmolb.Logger.prototype = {
 
         log : function (level, message) {
             if (console) {
@@ -47,14 +48,13 @@
         }
     };
 
+
     //
     // Models.
     //
 
-    /**
-     * The palette represents colors available to the user.
-     */
-    lumiere.Palette = Backbone.Model.extend({
+
+    mmolb.Palette = Backbone.Model.extend({
 
         defaults : {
             'color' : 'yellow'
@@ -70,10 +70,7 @@
     });
 
 
-    /**
-     * The screen that lights get applied to.
-     */
-    lumiere.Screen = Backbone.Model.extend({
+    mmolb.Screen = Backbone.Model.extend({
 
         defaults : {
             matrix: [],
@@ -111,6 +108,7 @@
 
     });
 
+
     //
     // Views.
     //
@@ -127,7 +125,7 @@
     /**
      * The view for our screen.
      */
-    lumiere.ScreenView = Backbone.View.extend({
+    mmolb.ScreenView = Backbone.View.extend({
 
         events : {
             'mousedown' : 'onMouseDown',
@@ -136,7 +134,7 @@
 
         initialize : function (options) {
 
-            this.logger = new lumiere.Logger("ScreenView");
+            this.logger = new mmolb.Logger("ScreenView");
 
             // Our canvas object.
             this.canvas = document.getElementById('lights');
@@ -341,9 +339,7 @@
             this.context.restore();
         },
 
-        /**
-         * Return the element that the given touch event touched.
-         */
+        // Return the element that the given touch event touched.
         getEventElement : function (e) {
             var r = Math.floor;
             var p = this.getEventPoint(e);
@@ -353,10 +349,8 @@
             };
         },
 
-        /**
-         * Return the position of the given event relative to the canvas
-         * boundary.
-         */
+        // Return the position of the given event relative to the canvas
+        // boundary.
         getEventPoint : function (event) {
             return {
                 x : event.pageX - event.target.offsetLeft,
@@ -380,11 +374,7 @@
     });
 
 
-    /**
-     * The Palette's view.
-     */
-
-    lumiere.PaletteView = Backbone.View.extend({
+    mmolb.PaletteView = Backbone.View.extend({
 
         initialize : function () {
             this.model.bind('change', _.bind(this.onModelChange, this));
@@ -410,7 +400,7 @@
 
     });
 
-    lumiere.ZoomView = Backbone.View.extend({
+    mmolb.ZoomView = Backbone.View.extend({
 
         events : {
             'click .zoomer' : 'onZoom'
@@ -430,24 +420,24 @@ $(function () {
 
 
     // Initialize the logger.
-    var logger = new lumiere.Logger('app');
+    var logger = new mmolb.Logger('app');
     logger.debug("initializing");
 
     // Initialize our sockets.
     var socket = io.connect(window.location.origin);
 
     // Initialize our models.
-    var palette = new lumiere.Palette();
-    var screen = new lumiere.Screen();
+    var palette = new mmolb.Palette();
+    var screen = new mmolb.Screen();
 
     // Initalize our views.
-    var paletteView = new lumiere.PaletteView({el: $('#palette'), model: palette});
+    var paletteView = new mmolb.PaletteView({el: $('#palette'), model: palette});
     paletteView.bind('color_selected', function (color) {
         palette.setColor(color);
     });
 
     // Set up view event listeners.
-    var screenView = new lumiere.ScreenView({el: $('#lights'), model: screen});
+    var screenView = new mmolb.ScreenView({el: $('#lights'), model: screen});
     screenView.bind('element_selected', function (i, j) {
         var paletteColor = palette.getColor();
         var newColor = screen.toggleElement(i, j, paletteColor);
@@ -470,7 +460,7 @@ $(function () {
         logger.debug('got mouse move');
     });
 
-    var zoomView = new lumiere.ZoomView({el: $('#zoomers')});
+    var zoomView = new mmolb.ZoomView({el: $('#zoomers')});
     zoomView.bind('zoom_in', function () {
         screenView.zoomIn();
     });
